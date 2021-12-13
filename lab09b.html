@@ -4,6 +4,16 @@
 <head>
     <title>Abuse cases A&E attendance, Simple Circle Chart</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        #tooltip {
+            display: none;
+            position: absolute;
+            border-bottom: 1px dotted #666;
+            background-color: FloralWhite;
+            padding: 5px;
+            text-align: left;
+        }
+    </style>
 </head>
 
 <body>
@@ -53,29 +63,86 @@
             { district: "Islands", cases: 21.0 }
         ];
 
-        var circles = d3.selectAll("circle");
-        circles.data(abuses);
+        // var circles = d3.selectAll("circle");
+        // circles.data(abuses);
 
-        // d3.selectAll("circle").style("fill", "blue");
-        circles.style("fill","steelblue");
+        // // d3.selectAll("circle").style("fill", "blue");
+        // circles.style("fill","steelblue");
 
-        circles.attr("r", function (d) {
-            return d.cases;
-        });
+        // circles.attr("r", function (d) {
+        //     return d.cases;
+        // });
 
-        var myColorScale = d3.scaleLinear().domain([14, 25, 43]).range(["green", "red"]);
-        circles.style("fill", function(d){
-            return myColorScale(d.cases);
-        });
+        // var myColorScale = d3.scaleLinear().domain([14, 25, 43]).range(["green", "red"]);
+        // circles.style("fill", function(d){
+        //     return myColorScale(d.cases);
+        // });
+
     </script>
 
     <div id="tooltip">
-        <div id="title">
-            <div id="subtitle"></div>
-        </div>
+        <h3 id="title"></h3>
+        <p id="subtitle"></p>
     </div>
     
+    <script>
+        var circles = d3.selectAll("circle");
+        circles.data(abuses);
+        circles.style("fill","blue");
 
+        circles.attr("r", function(d){
+            return d.cases;
+        });
+        
+        
+        /**
+         * style with color scaleLinear
+        */
+        circles.style("fill","steelblue");
+
+        var colorRange = d3.scaleLinear().domain([14, 30, 43]).range(["green","red"]);
+
+        circles.style("fill", function(d){
+            return colorRange(d.cases);
+        });
+
+
+        var tooltip = d3.select("#tooltip");
+        var title = d3.select("#title");
+        var subtitle = d3.select("#subtitle");
+        
+        circles
+            .on("mouseover", function (event, d) {
+                tooltip.style("display", "block");
+
+                title.text(d.district);
+                subtitle.text(d.cases + "cases");
+
+                // title.text(d.district);
+                // subtitle.text(d.cases + " cases per 100k population.");
+            })
+            .on("mouseout", function () {
+                tooltip.style("display", "none")
+                // tooltip.style("display", "none");
+            })
+            .on('mousemove', function (event) {
+                let coords = d3.pointer(event);
+
+                tooltip
+                    .style("left", (coords[0] + 15) + "px")
+                    .style("top", (coords[1] + 15) +"px");
+
+                // let coords = d3.pointer(event);
+                // tooltip
+                //     .style("left", (coords[0] + 15) + "px")
+                //     .style("top", (coords[1] - 95) + "px");
+            });
+        
+        /**
+         * Force layout: 做D3图, 的轴
+        */
+        
+    </script>
 
 </body>
 

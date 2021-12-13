@@ -30,6 +30,7 @@
         <circle cx="650" cy="360" r="30"></circle>
     </svg>
     
+    <!-- 给D3图片用的script,  -->
     <script>
         var abuses = [
             { district: "Central & Western", cases: 14.5 },
@@ -61,7 +62,20 @@
         circles.attr("r", function (d) {
             return d.cases;
         });
+
+        var myColorScale = d3.scaleLinear().domain([14, 25, 43]).range(["green", "red"]);
+        circles.style("fill", function(d){
+            return myColorScale(d.cases);
+        });
     </script>
+
+    <div id="tooltip">
+        <div id="title">
+            <div id="subtitle"></div>
+        </div>
+    </div>
+    
+
 
 </body>
 
